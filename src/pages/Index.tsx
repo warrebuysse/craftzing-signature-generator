@@ -7,6 +7,12 @@ import { useToast } from "@/components/ui/use-toast";
 import { Copy } from "lucide-react";
 import Preview from "@/components/Preview";
 import debounce from "lodash/debounce";
+import hljs from 'highlight.js/lib/core';
+import xml from 'highlight.js/lib/languages/xml';
+import 'highlight.js/styles/github-dark.css';
+
+// Register the languages you need
+hljs.registerLanguage('xml', xml);
 
 const Index = () => {
   const { toast } = useToast();
@@ -32,25 +38,33 @@ const Index = () => {
     debouncedSetFormData(name, value);
   };
 
-  const copyToClipboard = () => {
+  const getPreviewCode = () => {
     const previewElement = document.querySelector('.preview-container');
-    if (previewElement) {
-      const previewHtml = previewElement.innerHTML;
-      navigator.clipboard.writeText(previewHtml)
-        .then(() => {
-          toast({
-            title: "Copied!",
-            description: "Signature code has been copied to clipboard",
-          });
-        })
-        .catch(() => {
-          toast({
-            title: "Error",
-            description: "Failed to copy signature code",
-            variant: "destructive",
-          });
+    return previewElement ? previewElement.innerHTML : '';
+  };
+
+  const copyToClipboard = () => {
+    const code = getPreviewCode();
+    navigator.clipboard.writeText(code)
+      .then(() => {
+        toast({
+          title: "Copied!",
+          description: "Signature code has been copied to clipboard",
         });
-    }
+      })
+      .catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to copy signature code",
+          variant: "destructive",
+        });
+      });
+  };
+
+  const getHighlightedCode = () => {
+    const code = getPreviewCode();
+    const highlighted = hljs.highlight(code, { language: 'xml' }).value;
+    return highlighted;
   };
 
   const processImage = (file: File): Promise<string> => {
@@ -146,11 +160,11 @@ const Index = () => {
             <div className="space-y-2">
               <Label htmlFor="jobTitle" className="text-primary">Job Title</Label>
               <Input
-              id="jobTitle"
-              name="jobTitle"
-              defaultValue={formData.jobTitle}
-              onChange={handleInputChange}
-              className="bg-background border-input focus:border-primary"
+                id="jobTitle"
+                name="jobTitle"
+                defaultValue={formData.jobTitle}
+                onChange={handleInputChange}
+                className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
@@ -210,7 +224,10 @@ const Index = () => {
               </Button>
             </div>
             <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm text-foreground border border-border">
-              {formData.toString()}
+              <code 
+                className="hljs language-xml"
+                dangerouslySetInnerHTML={{ __html: getHighlightedCode() }}
+              />
             </pre>
           </Card>
         </div>
