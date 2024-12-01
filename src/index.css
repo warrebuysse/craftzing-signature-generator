@@ -1,5 +1,4 @@
-@import url('https://api.fontshare.com/v2/css?f[]=satoshi@900,700,500,301,701,300,501,401,901,400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=GT+Sectra+Display:wght@400;700&display=swap');
+@import url('https://use.typekit.net/xtg8ggt.css');
 @import url('https://fonts.cdnfonts.com/css/tt-commons-pro');
 
 @tailwind base;
@@ -82,10 +81,10 @@
   }
 
   body {
-    @apply bg-background text-foreground font-['TT_Commons_Pro'];
+    @apply bg-background text-foreground font-['tt_commons_pro'];
   }
 
   h1.title {
-    @apply font-['GT_Sectra_Display'];
+    @apply font-['gt_sectra'];
   }
 }
