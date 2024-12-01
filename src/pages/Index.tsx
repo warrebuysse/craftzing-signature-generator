@@ -134,7 +134,7 @@ const Index = () => {
             Email Signature Generator
           </h1>
           <p className="text-gray-600">
-            Create your professional email signature in seconds
+            Create your professional email signature in seconds. Fill in the required information below, upload your Craftzing profile picture and click "copy code". Paste the HTML code in your email program as HTML.
           </p>
         </div>
 
