@@ -1,60 +1,16 @@
-import { useState, useRef, useCallback } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-import { Copy } from "lucide-react";
-import Preview from "@/components/Preview";
-import debounce from "lodash/debounce";
+import { memo } from "react";
 
-const Index = () => {
-  const { toast } = useToast();
-  const [formData, setFormData] = useState({
-    firstName: "Warre",
-    lastName: "Buysse",
-    email: "warre.buysse@craftzing.com",
-    phone: "+32 (0)497 07 21 24",
-    image: "https://cv.craftzing.com/uploads/people/_80x80_crop_center-center_none/Mail-avatar-Maarten@3x-3.png"
-  });
-
-  // Debounced update function
-  const debouncedSetFormData = useCallback(
-    debounce((name: string, value: string) => {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }, 300),
-    []
-  );
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    // Update UI immediately for responsiveness
-    e.target.value = value;
-    // Debounce the actual state update
-    debouncedSetFormData(name, value);
+interface PreviewProps {
+  formData: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+    image: string;
   };
+}
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Add image size check
-      if (file.size > 500000) { // 500KB limit
-        toast({
-          title: "Image too large",
-          description: "Please select an image smaller than 500KB",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, image: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
+const Preview = memo(({ formData }: PreviewProps) => {
   const getSignatureCode = () => {
     return `<table style="Margin: 0; background: #ffffff; border-collapse: collapse; border-spacing: 0; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; width: 100%;" class="fa-a30xfy">
       <tbody>
@@ -98,98 +54,11 @@ const Index = () => {
     </table>`;
   };
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(getSignatureCode());
-    toast({
-      title: "Copied!",
-      description: "Signature code has been copied to clipboard",
-    });
-  };
-
   return (
-    <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Email Signature Generator</h1>
-      
-      {/* Input Form */}
-      <Card className="p-6">
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              id="firstName"
-              name="firstName"
-              defaultValue={formData.firstName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              defaultValue={formData.lastName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              defaultValue={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              name="phone"
-              defaultValue={formData.phone}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="image">Profile Picture</Label>
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="cursor-pointer"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Preview and Code Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Preview */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Preview</h2>
-          <div className="border p-4 rounded-lg bg-white">
-            <Preview formData={formData} />
-          </div>
-        </Card>
-
-        {/* Code */}
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Code</h2>
-            <Button onClick={copyToClipboard} variant="outline" size="sm">
-              <Copy className="w-4 h-4 mr-2" />
-              Copy Code
-            </Button>
-          </div>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-            {getSignatureCode()}
-          </pre>
-        </Card>
-      </div>
-    </div>
+    <div dangerouslySetInnerHTML={{ __html: getSignatureCode() }} />
   );
-};
+});
 
-export default Index;
+Preview.displayName = "Preview";
+
+export default Preview;
