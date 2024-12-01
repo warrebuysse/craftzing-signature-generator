@@ -32,6 +32,27 @@ const Index = () => {
     debouncedSetFormData(name, value);
   };
 
+  const copyToClipboard = () => {
+    const previewElement = document.querySelector('.preview-container');
+    if (previewElement) {
+      const previewHtml = previewElement.innerHTML;
+      navigator.clipboard.writeText(previewHtml)
+        .then(() => {
+          toast({
+            title: "Copied!",
+            description: "Signature code has been copied to clipboard",
+          });
+        })
+        .catch(() => {
+          toast({
+            title: "Error",
+            description: "Failed to copy signature code",
+            variant: "destructive",
+          });
+        });
+    }
+  };
+
   const processImage = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const canvas = document.createElement('canvas');
@@ -39,30 +60,24 @@ const Index = () => {
       const img = new Image();
 
       img.onload = () => {
-        // Make canvas square based on the largest dimension
         const size = Math.max(img.width, img.height);
         canvas.width = size;
         canvas.height = size;
 
         if (ctx) {
-          // Fill with transparency
           ctx.fillStyle = 'rgba(0,0,0,0)';
           ctx.fillRect(0, 0, size, size);
 
-          // Create circular clipping path
           ctx.beginPath();
           ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2, true);
           ctx.closePath();
           ctx.clip();
 
-          // Calculate position to center the image
           const xOffset = (size - img.width) / 2;
           const yOffset = (size - img.height) / 2;
           
-          // Draw the image
           ctx.drawImage(img, xOffset, yOffset, img.width, img.height);
           
-          // Convert to PNG with transparency
           resolve(canvas.toDataURL('image/png'));
         } else {
           reject(new Error('Could not get canvas context'));
@@ -99,118 +114,102 @@ const Index = () => {
     }
   };
 
-  const copyToClipboard = () => {
-    const preview = document.querySelector('.preview-container');
-    if (preview) {
-      const range = document.createRange();
-      range.selectNode(preview);
-      window.getSelection()?.removeAllRanges();
-      window.getSelection()?.addRange(range);
-      document.execCommand('copy');
-      window.getSelection()?.removeAllRanges();
-    }
-    toast({
-      title: "Copied!",
-      description: "Signature code has been copied to clipboard",
-    });
-  };
-
   return (
-    <div className="min-h-screen bg-[#1A1F2C] text-white">
+    <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto p-4 space-y-8">
         <h1 className="text-4xl font-bold text-center mb-8 font-['Satoshi'] text-[#9b87f5]">
           Email Signature Generator
         </h1>
         
-        <Card className="bg-[#222632] border-[#2A2F3C]">
+        <Card className="bg-card border-border">
           <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
             <div className="space-y-2">
-              <Label htmlFor="firstName" className="text-[#9b87f5]">First Name</Label>
+              <Label htmlFor="firstName" className="text-primary">First Name</Label>
               <Input
                 id="firstName"
                 name="firstName"
                 defaultValue={formData.firstName}
                 onChange={handleInputChange}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+                className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName" className="text-[#9b87f5]">Last Name</Label>
+              <Label htmlFor="lastName" className="text-primary">Last Name</Label>
               <Input
                 id="lastName"
                 name="lastName"
                 defaultValue={formData.lastName}
                 onChange={handleInputChange}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+                className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="jobTitle" className="text-[#9b87f5]">Job Title</Label>
+              <Label htmlFor="jobTitle" className="text-primary">Job Title</Label>
               <Input
-                id="jobTitle"
-                name="jobTitle"
-                defaultValue={formData.jobTitle}
-                onChange={handleInputChange}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              id="jobTitle"
+              name="jobTitle"
+              defaultValue={formData.jobTitle}
+              onChange={handleInputChange}
+              className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-[#9b87f5]">Email</Label>
+              <Label htmlFor="email" className="text-primary">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
                 defaultValue={formData.email}
                 onChange={handleInputChange}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+                className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-[#9b87f5]">Phone Number</Label>
+              <Label htmlFor="phone" className="text-primary">Phone Number</Label>
               <Input
                 id="phone"
                 name="phone"
                 defaultValue={formData.phone}
                 onChange={handleInputChange}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+                className="bg-background border-input focus:border-primary"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="image" className="text-[#9b87f5]">Profile Picture</Label>
+              <Label htmlFor="image" className="text-primary">Profile Picture</Label>
               <Input
                 id="image"
                 name="image"
                 type="file"
                 accept="image/*"
                 onChange={handleImageUpload}
-                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5] cursor-pointer"
+                className="bg-background border-input focus:border-primary cursor-pointer"
               />
             </div>
           </CardContent>
         </Card>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="bg-[#222632] border-[#2A2F3C] p-6">
-            <h2 className="text-xl font-semibold mb-4 text-[#9b87f5]">Preview</h2>
-            <div className="preview-container border border-[#2A2F3C] p-4 rounded-lg bg-white">
+          <Card className="bg-card border-border p-6">
+            <h2 className="text-xl font-semibold mb-4 text-primary">Preview</h2>
+            <div className="preview-container border border-border p-4 rounded-lg bg-white">
               <Preview formData={formData} />
             </div>
           </Card>
 
-          <Card className="bg-[#222632] border-[#2A2F3C] p-6">
+          <Card className="bg-card border-border p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-[#9b87f5]">Code</h2>
+              <h2 className="text-xl font-semibold text-primary">Code</h2>
               <Button 
                 onClick={copyToClipboard} 
                 variant="outline" 
                 size="sm"
-                className="bg-[#9b87f5] text-white hover:bg-[#7E69AB] border-none"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 border-none"
               >
                 <Copy className="w-4 h-4 mr-2" />
                 Copy Code
               </Button>
             </div>
-            <pre className="bg-[#1A1F2C] p-4 rounded-lg overflow-x-auto text-sm text-white border border-[#2A2F3C]">
+            <pre className="bg-muted p-4 rounded-lg overflow-x-auto text-sm text-foreground border border-border">
               {formData.toString()}
             </pre>
           </Card>

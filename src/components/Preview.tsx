@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useRef } from "react";
 
 interface PreviewProps {
   formData: {
@@ -12,6 +12,8 @@ interface PreviewProps {
 }
 
 const Preview = memo(({ formData }: PreviewProps) => {
+  const previewRef = useRef<HTMLDivElement>(null);
+
   const getSignatureCode = () => {
     return `<table style="Margin: 0; background: #ffffff; border-collapse: collapse; border-spacing: 0; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; width: 100%;" class="fa-a30xfy">
       <tbody>
@@ -56,7 +58,7 @@ const Preview = memo(({ formData }: PreviewProps) => {
   };
 
   return (
-    <div dangerouslySetInnerHTML={{ __html: getSignatureCode() }} />
+    <div ref={previewRef} dangerouslySetInnerHTML={{ __html: getSignatureCode() }} />
   );
 });
 
