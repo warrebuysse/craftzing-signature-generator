@@ -2,7 +2,7 @@ import { Button } from "./ui/button";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm z-50 border-b border-gray-100">
+    <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-sm z-50 border-b border-[--color-neutral-200]">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <div className="flex items-center gap-8">
           <img 
@@ -12,10 +12,10 @@ const Header = () => {
           />
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" className="text-[#7868ba] hover:text-[#7868ba]/80">
+          <Button variant="ghost" className="text-[--color-primary-600] hover:text-[--color-primary-600]/80">
             Help
           </Button>
-          <Button className="bg-[#7868ba] hover:bg-[#7868ba]/90 text-white">
+          <Button className="bg-[--color-primary-600] hover:bg-[--color-primary-600]/90 text-white">
             Contact us
           </Button>
         </div>
