@@ -158,7 +158,7 @@ const Index = () => {
               <Button 
                 onClick={copyToClipboard} 
                 variant="outline"
-                className="bg-[#7868ba] text-white hover:bg-[#7868ba]/90 border-none"
+                className="bg-[--color-primary-600] text-white hover:bg-[--color-primary-700] border-none rounded-none"
               >
                 <Copy className="w-4 h-4 mr-2" />
                 Copy Code
