@@ -15,6 +15,9 @@ const Preview = memo(({ formData }: PreviewProps) => {
   const previewRef = useRef<HTMLDivElement>(null);
 
   const getSignatureCode = () => {
+    // Use absolute URL for the logo to ensure it works in email clients
+    const logoUrl = `${window.location.origin}/lovable-uploads/8f9f0b9f-2deb-420c-9f9b-7b2689c790c9.png`;
+    
     return `<table style="Margin: 0; background: #ffffff; border-collapse: collapse; border-spacing: 0; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; width: 100%;" class="fa-a30xfy">
       <tbody>
         <tr style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top;">
@@ -41,7 +44,7 @@ const Preview = memo(({ formData }: PreviewProps) => {
                           </th>
                           <th style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0 auto; border-collapse: collapse !important; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0 auto; padding-bottom: 5px; padding-left: 20px; padding-right: 10px; padding-top: 0; text-align: left; vertical-align: top; width: 290px; word-wrap: break-word;" valign="top" align="left">
                             <a style="color: #7868ba; font-family: Arial, sans-serif; font-weight: normal; line-height: 1.3; padding: 0; text-align: left; text-decoration: none !important;" title="Craftzing" href="https://craftzing.com/" target="_blank" rel="noopener noreferrer">
-                              <img style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: none; text-decoration: none; height: 38px;" alt="Craftzing" src="/lovable-uploads/8f9f0b9f-2deb-420c-9f9b-7b2689c790c9.png">
+                              <img style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: none; text-decoration: none; height: 38px;" alt="Craftzing" src="${logoUrl}">
                             </a>
                           </th>
                         </tr>
