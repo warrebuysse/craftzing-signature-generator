@@ -117,8 +117,8 @@ const Index = () => {
     <div className="min-h-screen bg-[#F8F7FC]">
       <Header />
       
-      <main className="container mx-auto px-4 pt-24 pb-12 space-y-8">
-        <div className="text-center space-y-4 max-w-2xl mx-auto">
+      <main className="container mx-auto px-4 pt-[84px] pb-12 space-y-8">
+        <div className="text-center space-y-4 max-w-2xl mx-auto my-[30px]">
           <h1 className="text-[56px] leading-[64px] font-bold font-['gt_sectra'] text-black">
             Email Signature Generator
           </h1>
