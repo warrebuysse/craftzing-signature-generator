@@ -78,7 +78,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white text-[--color-neutral-800] cursor-pointer rounded-none file:mr-4 file:py-1 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-[--color-primary-600] file:text-white hover:file:bg-[--color-primary-700] pt-[5px] pb-[5px]"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white text-[--color-neutral-800] cursor-pointer rounded-none file:mr-4 file:py-1 file:px-4 file:border-0 file:text-sm file:font-semibold file:bg-[--color-primary-600] file:text-white hover:file:bg-[--color-primary-700]"
           />
         </div>
       </CardContent>
