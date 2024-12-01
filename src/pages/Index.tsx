@@ -11,7 +11,6 @@ import hljs from 'highlight.js/lib/core';
 import xml from 'highlight.js/lib/languages/xml';
 import 'highlight.js/styles/github-dark.css';
 
-// Register the languages you need
 hljs.registerLanguage('xml', xml);
 
 const Index = () => {
@@ -63,8 +62,7 @@ const Index = () => {
 
   const getHighlightedCode = () => {
     const code = getPreviewCode();
-    const highlighted = hljs.highlight(code, { language: 'xml' }).value;
-    return highlighted;
+    return hljs.highlight(code, { language: 'xml' }).value;
   };
 
   const processImage = (file: File): Promise<string> => {
@@ -131,7 +129,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <div className="container mx-auto p-4 space-y-8">
-        <h1 className="text-4xl font-bold text-center mb-8 font-['Satoshi'] text-[#9b87f5]">
+        <h1 className="text-4xl font-bold text-center mb-8 font-gt-sectra text-[#9b87f5]">
           Email Signature Generator
         </h1>
         
@@ -204,7 +202,7 @@ const Index = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Card className="bg-card border-border p-6">
-            <h2 className="text-xl font-semibold mb-4 text-primary">Preview</h2>
+            <h2 className="text-xl font-semibold mb-4 text-primary font-tt-commons">Preview</h2>
             <div className="preview-container border border-border p-4 rounded-lg bg-white">
               <Preview formData={formData} />
             </div>
@@ -212,7 +210,7 @@ const Index = () => {
 
           <Card className="bg-card border-border p-6">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-primary">Code</h2>
+              <h2 className="text-xl font-semibold text-primary font-tt-commons">Code</h2>
               <Button 
                 onClick={copyToClipboard} 
                 variant="outline" 
