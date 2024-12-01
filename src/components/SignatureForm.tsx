@@ -26,7 +26,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             name="firstName"
             defaultValue={formData.firstName}
             onChange={handleInputChange}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white rounded-none"
           />
         </div>
         <div className="space-y-2">
@@ -36,7 +36,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             name="lastName"
             defaultValue={formData.lastName}
             onChange={handleInputChange}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white rounded-none"
           />
         </div>
         <div className="space-y-2">
@@ -46,7 +46,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             name="jobTitle"
             defaultValue={formData.jobTitle}
             onChange={handleInputChange}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white rounded-none"
           />
         </div>
         <div className="space-y-2">
@@ -57,7 +57,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             type="email"
             defaultValue={formData.email}
             onChange={handleInputChange}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white rounded-none"
           />
         </div>
         <div className="space-y-2">
@@ -67,7 +67,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             name="phone"
             defaultValue={formData.phone}
             onChange={handleInputChange}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white rounded-none"
           />
         </div>
         <div className="space-y-2">
@@ -78,7 +78,7 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
             type="file"
             accept="image/*"
             onChange={handleImageUpload}
-            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white cursor-pointer"
+            className="border-[--color-neutral-200] focus-visible:ring-[--color-primary-600] bg-white cursor-pointer rounded-none"
           />
         </div>
       </CardContent>

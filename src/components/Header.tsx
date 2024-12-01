@@ -12,11 +12,11 @@ const Header = () => {
           />
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" className="text-[--color-primary-600] hover:text-[--color-primary-600]/80">
-            Help
-          </Button>
-          <Button className="bg-[--color-primary-600] hover:bg-[--color-primary-600]/90 text-white">
-            Contact us
+          <Button 
+            className="bg-[--color-primary-600] hover:bg-[--color-primary-700] text-white rounded-none"
+            onClick={() => window.open('https://craftzing.atlassian.net/wiki/spaces/CZ/pages/9879486491/Email+Signature', '_blank')}
+          >
+            More info on Confluence
           </Button>
         </div>
       </div>
