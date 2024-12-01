@@ -7,11 +7,6 @@ import Preview from "@/components/Preview";
 import Header from "@/components/Header";
 import SignatureForm from "@/components/SignatureForm";
 import debounce from "lodash/debounce";
-import hljs from 'highlight.js/lib/core';
-import xml from 'highlight.js/lib/languages/xml';
-import 'highlight.js/styles/github-dark.css';
-
-hljs.registerLanguage('xml', xml);
 
 const Index = () => {
   const { toast } = useToast();
@@ -118,22 +113,16 @@ const Index = () => {
       });
   };
 
-  const getHighlightedCode = () => {
-    const previewElement = document.querySelector('.preview-container');
-    const code = previewElement ? previewElement.innerHTML : '';
-    return hljs.highlight(code, { language: 'xml' }).value;
-  };
-
   return (
     <div className="min-h-screen bg-[#F8F7FC]">
       <Header />
       
       <main className="container mx-auto px-4 pt-24 pb-12 space-y-8">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h1 className="text-4xl font-bold font-['gt_sectra'] text-black">
+          <h1 className="text-[56px] leading-[64px] font-bold font-['gt_sectra'] text-black">
             Email Signature Generator
           </h1>
-          <p className="text-gray-600">
+          <p className="text-[20px] leading-[32px] text-gray-600 font-['tt_commons_pro']">
             Create your professional email signature in seconds. Fill in the required information below, upload your Craftzing profile picture and click "copy code". Paste the HTML code in your email program as HTML.
           </p>
         </div>
@@ -144,34 +133,22 @@ const Index = () => {
           handleImageUpload={handleImageUpload}
         />
 
-        <div className="space-y-8">
-          <Card className="bg-white shadow-sm border-gray-100 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Preview</h2>
-            <div className="preview-container border border-gray-200 p-4 rounded-lg bg-white">
-              <Preview formData={formData} />
-            </div>
-          </Card>
-
-          <Card className="bg-white shadow-sm border-gray-100 p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold text-gray-800">Code</h2>
-              <Button 
-                onClick={copyToClipboard} 
-                variant="outline"
-                className="bg-[--color-primary-600] text-white hover:bg-[--color-primary-700] border-none rounded-none"
-              >
-                <Copy className="w-4 h-4 mr-2" />
-                Copy Code
-              </Button>
-            </div>
-            <pre className="bg-[#1A1F2C] p-4 rounded-lg overflow-x-auto text-sm">
-              <code 
-                className="hljs language-xml"
-                dangerouslySetInnerHTML={{ __html: getHighlightedCode() }}
-              />
-            </pre>
-          </Card>
-        </div>
+        <Card className="bg-white shadow-sm border-gray-100 p-6">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold text-gray-800">Preview</h2>
+            <Button 
+              onClick={copyToClipboard} 
+              variant="outline"
+              className="bg-[--color-primary-600] text-white hover:bg-[--color-primary-700] border-none rounded-none"
+            >
+              <Copy className="w-4 h-4 mr-2" />
+              Copy Code
+            </Button>
+          </div>
+          <div className="preview-container border border-gray-200 p-4 rounded-lg bg-white">
+            <Preview formData={formData} />
+          </div>
+        </Card>
       </main>
     </div>
   );
