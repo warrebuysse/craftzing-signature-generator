@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,10 +15,10 @@ const Index = () => {
     lastName: "Buysse",
     email: "warre.buysse@craftzing.com",
     phone: "+32 (0)497 07 21 24",
+    jobTitle: "COO",
     image: "https://cv.craftzing.com/uploads/people/_80x80_crop_center-center_none/Mail-avatar-Maarten@3x-3.png"
   });
 
-  // Debounced update function
   const debouncedSetFormData = useCallback(
     debounce((name: string, value: string) => {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -28,17 +28,56 @@ const Index = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // Update UI immediately for responsiveness
     e.target.value = value;
-    // Debounce the actual state update
     debouncedSetFormData(name, value);
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const processImage = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        // Make canvas square based on the largest dimension
+        const size = Math.max(img.width, img.height);
+        canvas.width = size;
+        canvas.height = size;
+
+        if (ctx) {
+          // Fill with transparency
+          ctx.fillStyle = 'rgba(0,0,0,0)';
+          ctx.fillRect(0, 0, size, size);
+
+          // Create circular clipping path
+          ctx.beginPath();
+          ctx.arc(size/2, size/2, size/2, 0, Math.PI * 2, true);
+          ctx.closePath();
+          ctx.clip();
+
+          // Calculate position to center the image
+          const xOffset = (size - img.width) / 2;
+          const yOffset = (size - img.height) / 2;
+          
+          // Draw the image
+          ctx.drawImage(img, xOffset, yOffset, img.width, img.height);
+          
+          // Convert to PNG with transparency
+          resolve(canvas.toDataURL('image/png'));
+        } else {
+          reject(new Error('Could not get canvas context'));
+        }
+      };
+
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Add image size check
-      if (file.size > 500000) { // 500KB limit
+      if (file.size > 500000) {
         toast({
           title: "Image too large",
           description: "Please select an image smaller than 500KB",
@@ -47,59 +86,29 @@ const Index = () => {
         return;
       }
 
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setFormData(prev => ({ ...prev, image: reader.result as string }));
-      };
-      reader.readAsDataURL(file);
+      try {
+        const processedImageUrl = await processImage(file);
+        setFormData(prev => ({ ...prev, image: processedImageUrl }));
+      } catch (error) {
+        toast({
+          title: "Error processing image",
+          description: "Failed to process the image. Please try again.",
+          variant: "destructive"
+        });
+      }
     }
   };
 
-  const getSignatureCode = () => {
-    return `<table style="Margin: 0; background: #ffffff; border-collapse: collapse; border-spacing: 0; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; width: 100%;" class="fa-a30xfy">
-      <tbody>
-        <tr style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top;">
-          <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; word-wrap: break-word;" valign="top">
-            <table style="Margin: 0 auto; background: #fefefe; border-collapse: collapse; border-spacing: 0; margin: 0 auto; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: inherit; vertical-align: top; width: 600px;" class="fa-fn006d" align="left">
-              <tbody>
-                <tr style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top;">
-                  <td style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0; border-collapse: collapse !important; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top; word-wrap: break-word;">
-                    <table style="border-collapse: collapse; border-spacing: 0px; display: table; padding: 0px; text-align: left; vertical-align: top; width: 100%;" class="fa-ycovfp">
-                      <tbody>
-                        <tr style="padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; vertical-align: top;">
-                          <th style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0 auto; border-collapse: collapse !important; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0 auto; padding-bottom: 5px; padding-left: 10px; padding-right: 5px; padding-top: 0; text-align: left; vertical-align: top; width: 40px; word-wrap: break-word;" valign="top" align="left">
-                            <img style="-ms-interpolation-mode: bicubic; clear: both; display: block; height: 40px !important; max-width: 40px !important; outline: none; text-decoration: none; width: 40px !important;" alt="" height="40" width="40" src="${formData.image}">
-                          </th>
-                          <th style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0 auto; border-collapse: collapse !important; border-right: 1px solid #D5D5D5; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0 auto; padding-bottom: 5px; padding-left: 7px; padding-right: 5px; padding-top: 5px; text-align: left; vertical-align: top; width: 240px; word-wrap: break-word;" valign="top" align="left">
-                            <h1 style="Margin: 0; Margin-bottom: 10px; color: inherit; font-family: 'Helvetica Neue', arial, sans-serif; font-size: 14px; font-weight: bold; line-height: 1.16; margin: 0; margin-bottom: 2px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal;">${formData.firstName} ${formData.lastName}</h1>
-                            <h2 style="Margin: 0; Margin-bottom: 10px; color: #5e5e5e; font-family: 'Helvetica Neue', arial, sans-serif; font-size: 12px; font-weight: 300; line-height: 1.16; margin: 0; margin-bottom: 15px; padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0; text-align: left; word-wrap: normal;">COO</h2>
-                            <div>
-                              <a style="color: #7868ba !important; font-family: 'Helvetica Neue', arial, sans-serif; font-size: 12px; font-weight: normal; line-height: 1.3; padding: 0; text-align: left; text-decoration: underline;" href="mailto:${formData.email}">${formData.email}</a>
-                            </div>
-                            <div>
-                              <a style="color: #7868ba !important; font-family: 'Helvetica Neue', arial, sans-serif; font-size: 12px; font-weight: normal; line-height: 1.3; padding: 0; text-align: left; text-decoration: underline;" href="tel:${formData.phone}">${formData.phone}</a>
-                            </div>
-                          </th>
-                          <th style="-moz-hyphens: auto; -webkit-hyphens: auto; Margin: 0 auto; border-collapse: collapse !important; color: #0a0a0a; font-family: Arial, sans-serif; font-size: 16px; font-weight: normal; hyphens: auto; line-height: 1.3; margin: 0 auto; padding-bottom: 5px; padding-left: 20px; padding-right: 10px; padding-top: 0; text-align: left; vertical-align: top; width: 290px; word-wrap: break-word;" valign="top" align="left">
-                            <a style="color: #7868ba; font-family: Arial, sans-serif; font-weight: normal; line-height: 1.3; padding: 0; text-align: left; text-decoration: none !important;" title="Craftzing" href="https://craftzing.com/" target="_blank" rel="noopener noreferrer">
-                              <img style="-ms-interpolation-mode: bicubic; clear: both; display: block; max-width: 100%; outline: none; text-decoration: none;" alt="Craftzing Group" height="47" width="193.5" src="https://cv.craftzing.com/uploads/logos/_AUTOx94_fit_center-center_none/craftzing-group.png">
-                            </a>
-                          </th>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </td>
-        </tr>
-      </tbody>
-    </table>`;
-  };
-
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(getSignatureCode());
+    const preview = document.querySelector('.preview-container');
+    if (preview) {
+      const range = document.createRange();
+      range.selectNode(preview);
+      window.getSelection()?.removeAllRanges();
+      window.getSelection()?.addRange(range);
+      document.execCommand('copy');
+      window.getSelection()?.removeAllRanges();
+    }
     toast({
       title: "Copied!",
       description: "Signature code has been copied to clipboard",
@@ -107,86 +116,105 @@ const Index = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 space-y-8">
-      <h1 className="text-3xl font-bold text-center mb-8">Email Signature Generator</h1>
-      
-      {/* Input Form */}
-      <Card className="p-6">
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input
-              id="firstName"
-              name="firstName"
-              defaultValue={formData.firstName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input
-              id="lastName"
-              name="lastName"
-              defaultValue={formData.lastName}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              defaultValue={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input
-              id="phone"
-              name="phone"
-              defaultValue={formData.phone}
-              onChange={handleInputChange}
-            />
-          </div>
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="image">Profile Picture</Label>
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="cursor-pointer"
-            />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Preview and Code Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Preview */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Preview</h2>
-          <div className="border p-4 rounded-lg bg-white">
-            <Preview formData={formData} />
-          </div>
+    <div className="min-h-screen bg-[#1A1F2C] text-white">
+      <div className="container mx-auto p-4 space-y-8">
+        <h1 className="text-4xl font-bold text-center mb-8 font-['Satoshi'] text-[#9b87f5]">
+          Email Signature Generator
+        </h1>
+        
+        <Card className="bg-[#222632] border-[#2A2F3C]">
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+            <div className="space-y-2">
+              <Label htmlFor="firstName" className="text-[#9b87f5]">First Name</Label>
+              <Input
+                id="firstName"
+                name="firstName"
+                defaultValue={formData.firstName}
+                onChange={handleInputChange}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lastName" className="text-[#9b87f5]">Last Name</Label>
+              <Input
+                id="lastName"
+                name="lastName"
+                defaultValue={formData.lastName}
+                onChange={handleInputChange}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jobTitle" className="text-[#9b87f5]">Job Title</Label>
+              <Input
+                id="jobTitle"
+                name="jobTitle"
+                defaultValue={formData.jobTitle}
+                onChange={handleInputChange}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-[#9b87f5]">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                defaultValue={formData.email}
+                onChange={handleInputChange}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="phone" className="text-[#9b87f5]">Phone Number</Label>
+              <Input
+                id="phone"
+                name="phone"
+                defaultValue={formData.phone}
+                onChange={handleInputChange}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5]"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="image" className="text-[#9b87f5]">Profile Picture</Label>
+              <Input
+                id="image"
+                name="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="bg-[#1A1F2C] border-[#2A2F3C] text-white focus:border-[#9b87f5] cursor-pointer"
+              />
+            </div>
+          </CardContent>
         </Card>
 
-        {/* Code */}
-        <Card className="p-6">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold">Code</h2>
-            <Button onClick={copyToClipboard} variant="outline" size="sm">
-              <Copy className="w-4 h-4 mr-2" />
-              Copy Code
-            </Button>
-          </div>
-          <pre className="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-            {getSignatureCode()}
-          </pre>
-        </Card>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Card className="bg-[#222632] border-[#2A2F3C] p-6">
+            <h2 className="text-xl font-semibold mb-4 text-[#9b87f5]">Preview</h2>
+            <div className="preview-container border border-[#2A2F3C] p-4 rounded-lg bg-white">
+              <Preview formData={formData} />
+            </div>
+          </Card>
+
+          <Card className="bg-[#222632] border-[#2A2F3C] p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold text-[#9b87f5]">Code</h2>
+              <Button 
+                onClick={copyToClipboard} 
+                variant="outline" 
+                size="sm"
+                className="bg-[#9b87f5] text-white hover:bg-[#7E69AB] border-none"
+              >
+                <Copy className="w-4 h-4 mr-2" />
+                Copy Code
+              </Button>
+            </div>
+            <pre className="bg-[#1A1F2C] p-4 rounded-lg overflow-x-auto text-sm text-white border border-[#2A2F3C]">
+              {formData.toString()}
+            </pre>
+          </Card>
+        </div>
       </div>
     </div>
   );
