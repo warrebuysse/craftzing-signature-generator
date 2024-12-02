@@ -71,7 +71,17 @@ const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: Signa
           />
         </div>
         <div className="space-y-2">
-          <Label htmlFor="image" className="text-[--color-neutral-700]">Profile Picture</Label>
+          <div className="flex items-center gap-2">
+            <Label htmlFor="image" className="text-[--color-neutral-700]">Profile Picture</Label>
+            <a 
+              href="https://drive.google.com/open?id=1O3-SXFiRkhkULMdv7me1-b4oEKFH25W_&usp=drive_fs" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[--color-primary-600] hover:text-[--color-primary-700] text-sm"
+            >
+              Craftzing profile pics on Google Drive
+            </a>
+          </div>
           <Input
             id="image"
             name="image"
