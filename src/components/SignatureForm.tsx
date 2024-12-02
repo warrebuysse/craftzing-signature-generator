@@ -20,49 +20,92 @@ interface SignatureFormProps {
 declare global {
   interface Window {
     google: any;
+    gapi: {
+      load: (api: string, callback: () => void) => void;
+      client: {
+        init: (config: any) => Promise<void>;
+      };
+      auth2: {
+        init: (config: any) => Promise<void>;
+        getAuthInstance: () => any;
+      };
+    };
   }
 }
 
 const SignatureForm = ({ formData, handleInputChange, handleImageUpload }: SignatureFormProps) => {
   const loadGoogleDrivePicker = () => {
-    const script = document.createElement('script');
-    script.src = 'https://apis.google.com/js/api.js';
-    script.onload = () => {
-      window.gapi.load('picker', () => {
-        window.gapi.load('client:auth2', initPicker);
+    // Load the Google API script only if it hasn't been loaded yet
+    if (!window.gapi) {
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.onload = () => {
+        initializeGoogleAPI();
+      };
+      document.body.appendChild(script);
+    } else {
+      initializeGoogleAPI();
+    }
+  };
+
+  const initializeGoogleAPI = () => {
+    window.gapi.load('picker', () => {
+      window.gapi.load('client:auth2', async () => {
+        try {
+          const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+          const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+
+          await window.gapi.client.init({
+            apiKey: API_KEY,
+            clientId: CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/drive.readonly',
+          });
+
+          await window.gapi.auth2.init({
+            client_id: CLIENT_ID,
+            scope: 'https://www.googleapis.com/auth/drive.readonly',
+          });
+
+          initPicker();
+        } catch (error) {
+          console.error('Error initializing Google API:', error);
+        }
       });
-    };
-    document.body.appendChild(script);
+    });
   };
 
   const initPicker = async () => {
-    const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
-    const FOLDER_ID = '1O3-SXFiRkhkULMdv7me1-b4oEKFH25W_';
+    try {
+      const FOLDER_ID = '1O3-SXFiRkhkULMdv7me1-b4oEKFH25W_';
+      const auth = window.gapi.auth2.getAuthInstance();
+      
+      if (!auth) {
+        console.error('Auth instance not initialized');
+        return;
+      }
 
-    await window.gapi.client.init({
-      apiKey: API_KEY,
-      clientId: CLIENT_ID,
-      scope: 'https://www.googleapis.com/auth/drive.readonly',
-    });
+      let user = auth.currentUser.get();
+      if (!user.isSignedIn()) {
+        user = await auth.signIn();
+      }
 
-    const auth = window.gapi.auth2.getAuthInstance();
-    const user = await auth.signIn();
+      if (user) {
+        const token = user.getAuthResponse().access_token;
+        const view = new window.google.picker.View(window.google.picker.ViewId.DOCS_IMAGES);
+        view.setParent(FOLDER_ID);
 
-    if (user) {
-      const token = user.getAuthResponse().access_token;
-      const view = new window.google.picker.View(window.google.picker.ViewId.DOCS_IMAGES);
-      view.setParent(FOLDER_ID);
+        const picker = new window.google.picker.PickerBuilder()
+          .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
+          .setAppId(import.meta.env.VITE_GOOGLE_CLIENT_ID)
+          .setOAuthToken(token)
+          .addView(view)
+          .setCallback(pickerCallback)
+          .build();
 
-      const picker = new window.google.picker.PickerBuilder()
-        .enableFeature(window.google.picker.Feature.NAV_HIDDEN)
-        .setAppId(CLIENT_ID)
-        .setOAuthToken(token)
-        .addView(view)
-        .setCallback(pickerCallback)
-        .build();
-
-      picker.setVisible(true);
+        picker.setVisible(true);
+      }
+    } catch (error) {
+      console.error('Error initializing picker:', error);
     }
   };
 
