@@ -120,10 +120,10 @@ const Index = () => {
       <main className="container mx-auto px-4 pt-[84px] pb-12 space-y-8">
         <div className="text-center space-y-4 max-w-2xl mx-auto my-[30px]">
           <h1 className="text-[56px] leading-[64px] font-bold font-['gt_sectra'] text-black">
-            Email Signature Generator
+            Craftsignature Generator
           </h1>
           <p className="text-[20px] leading-[32px] text-gray-600 font-['tt_commons_pro']">
-            Create your professional email signature in seconds. Fill in the required information below, upload your Craftzing profile picture and click "copy code". Paste the HTML code in your email program as HTML.
+            Maak je professionele e-mailhandtekening in enkele seconden. Vul de vereiste informatie hieronder in, upload je Craftzing profielfoto en klik op "kopieer code". Plak de HTML-code als HTML in je e-mailprogramma.
           </p>
         </div>
 
@@ -135,14 +135,14 @@ const Index = () => {
 
         <Card className="bg-white shadow-sm border-gray-100 p-6">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-gray-800">Preview</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Voorbeeld</h2>
             <Button 
               onClick={copyToClipboard} 
               variant="outline"
               className="bg-[--color-primary-600] text-white hover:bg-[--color-primary-700] border-none rounded-none"
             >
               <Copy className="w-4 h-4 mr-2" />
-              Copy Code
+              Kopieer Code
             </Button>
           </div>
           <div className="preview-container border border-gray-200 p-4 rounded-lg bg-white">

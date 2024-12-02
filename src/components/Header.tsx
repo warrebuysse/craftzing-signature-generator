@@ -23,7 +23,7 @@ const Header = () => {
             className="bg-[--color-primary-600] hover:bg-[--color-primary-700] text-white rounded-none"
             onClick={() => window.open('https://craftzing.atlassian.net/wiki/spaces/CZ/pages/9879486491/Email+Signature', '_blank')}
           >
-            More info on Confluence
+            Meer info op Confluence
           </Button>
         </div>
       </div>
